@@ -1,0 +1,8 @@
+.misc-pub-post-status {
+	/*display: none;*/
+}
+
+.misc-pub-rad-publish-container select {
+	display: block;
+	width: 100%;
+}
