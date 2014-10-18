@@ -7,6 +7,9 @@
 				this.$el.on( 'click', '.publish-action-update', _.bind( this.handleUpdateClick, this ) );
 				this.$el.on( 'click', '.publish-action-publish-privately', _.bind( this.handlePublishPrivatelyClick, this ) );
 				this.$el.on( 'click', '.publish-action-publish-publicly', _.bind( this.handlePublishPubliclyClick, this ) );
+				this.$el.on( 'click', '.publish-action-preview', _.bind( this.handlePreviewClick, this ) );
+				this.$el.on( 'click', '.publish-action-trash', _.bind( this.handleTrashClick, this ) );
+				this.$el.on( 'click', '.publish-action-save-draft', _.bind( this.handleSaveDraftClick, this ) );
 
 			},
 
@@ -21,6 +24,14 @@
 						{
 							title: 'Publish Privately',
 							slug: 'publish-privately'
+						},
+						{
+							title: 'Preview Changes',
+							slug: 'preview'
+						},
+						{
+							title: 'Trash',
+							slug: 'trash'
 						}
 					];
 				}
@@ -33,6 +44,14 @@
 						{
 							title: 'Publish Publicly',
 							slug: 'publish-publicly'
+						},
+						{
+							title: 'Preview Changes',
+							slug: 'preview'
+						},
+						{
+							title: 'Trash',
+							slug: 'trash'
 						}
 					];
 				}
@@ -49,21 +68,39 @@
 						{
 							title: 'Publish Privately',
 							slug: 'publish-privately'
+						},
+						{
+							title: 'Preview Changes',
+							slug: 'preview'
+						},
+						{
+							title: 'Trash',
+							slug: 'trash'
 						}
-
 					];
 				}
 				if ( _.contains( [ 'auto-draft', 'draft' ], this.model.get( 'post_status' ) ) ) {
 					this.publishingOptions = [
 						{
 							title: 'Publish Now',
-							slug: 'publish'
+							slug: 'update'
 						},
 						{
-							title: 'Schedule',
-							slug: 'schedule'
+							title: 'Save Draft',
+							slug: 'save-draft'
+						},
+						{
+							title: 'Publish Privately',
+							slug: 'publish-privately'
+						},
+						{
+							title: 'Preview',
+							slug: 'preview'
+						},
+						{
+							title: 'Trash',
+							slug: 'trash'
 						}
-
 					];
 				}
 				$dropdown = $( '<div class="btn-group"></div>' );
@@ -82,19 +119,37 @@
 			},
 
 			handleUpdateClick: function() {
-				$('#publish').trigger( 'click' );
+				event.preventDefault();
+				$('#publish').simulate( 'click' );
 			},
 
 			handlePublishPrivatelyClick: function() {
+				event.preventDefault();
 				$('#post_status').val( 'publish' );
 				$('[name="visibility"]').val( 'private' );
-				$('#publish').trigger( 'click' );
+				$('#publish').simulate( 'click' );
 			},
 
 			handlePublishPubliclyClick: function() {
+				event.preventDefault();
 				$('#post_status').val( 'publish' );
 				$('[name="visibility"]').val( 'public' );
-				$('#publish').trigger( 'click' );
+				$('#publish').simulate( 'click' );
+			},
+
+			handlePreviewClick: function( event ) {
+				event.preventDefault();
+				$('#post-preview').simulate( 'click' );
+			},
+
+			handleTrashClick: function( event ) {
+				event.preventDefault();
+				$('#delete-action a').simulate( 'click' );
+			},
+
+			handleSaveDraftClick: function() {
+				event.preventDefault();
+				$('#save-post').simulate( 'click' );
 			}
 		});
 
