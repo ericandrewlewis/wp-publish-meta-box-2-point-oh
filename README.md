@@ -12,8 +12,8 @@ Auto Draft (Unsaved)
 - [x] Save Draft
 - [x] Publish
 - [ ] Schedule
-- [ ] Trash
-- [ ] Preview
+- [x] Trash
+- [x] Preview
 
 Draft
 - [x] Save Draft
@@ -42,5 +42,5 @@ Published Privately
 - [x] Publish Privately
 - [ ] Unpublish (save as draft)
 - [ ] Edit publish date (maybe schedule for future)
-- [ ] Trash
+- [x] Trash
 - [x] Preview changes
