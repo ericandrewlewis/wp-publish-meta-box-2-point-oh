@@ -3,45 +3,98 @@
 		var postStatusController = Backbone.View.extend({
 			initialize: function() {
 				this.model = new Backbone.Model( radPublishMetaBoxData );
+				this.createDropdown();
+				this.$el.on( 'click', '.publish-action-update', _.bind( this.handleUpdateClick, this ) );
+				this.$el.on( 'click', '.publish-action-publish-privately', _.bind( this.handlePublishPrivatelyClick, this ) );
+				this.$el.on( 'click', '.publish-action-publish-publicly', _.bind( this.handlePublishPubliclyClick, this ) );
 
-				$container = $('<div class="misc-pub-section misc-pub-rad-publish-container"></div>' );
-				var $select = this.$select = $('<select></select>' );
-				if ( this.model.get( 'post_status' ) === 'publish' ) {
-					$select.append( '<option value="publish">Published</option>' );
-					$select.append( '<option value="private">Publish Privately</option>' );
-				}
-				if ( this.model.get( 'post_status' ) === 'private' ) {
-					$select.append( '<option value="private">Privately Published</option>' );
-					$select.append( '<option value="publish">Publish Publicly</option>' )
-				}
-				if ( this.model.get( 'post_status' ) === 'future' ) {
-					$select.append( '<option value="future">Scheduled</option>' );
-					$select.append( '<option value="publish">Publish Now</option>' );
-					$select.append( '<option value="private">Publish Privately</option>' );
-				}
-				if ( _.contains( [ 'auto-draft', 'draft' ], this.model.get( 'post_status' ) ) ) {
-					$select.append( '<option value="publish-now">Publish Now</option>' );
-					$select.append( '<option value="schedule">Schedule</option>' );
-				}
-				$container.append( $select );
-				$('#misc-publishing-actions').prepend( $container );
-				this.$select.change( _.bind( this.handleSelectChange, this ) );
-
-				// trigger immediately so proper elements are hidden/shown based on current status.
-				this.handleSelectChange();
 			},
 
-			handleSelectChange: function() {
-				var newMetaPostStatus = this.$select.val();
-				if ( newMetaPostStatus === 'publish-now' ) {
-					$('.misc-pub-curtime, .misc-pub-post-status, .misc-pub-visibility').hide();
+			createDropdown: function() {
+				this.$el = $('<div class="misc-pub-section misc-pub-rad-publish-container"></div>' );
+				if ( this.model.get( 'post_status' ) === 'publish' ) {
+					this.publishingOptions = [
+						{
+							title: 'Update',
+							slug: 'update'
+						},
+						{
+							title: 'Publish Privately',
+							slug: 'publish-privately'
+						}
+					];
 				}
-				if ( newMetaPostStatus === 'schedule' ) {
-					$('.misc-pub-post-status, .misc-pub-visibility').hide();
-					$('.misc-pub-curtime').show();
-					$('#timestampdiv').show();
-					$('.edit-timestamp').hide();
+				if ( this.model.get( 'post_status' ) === 'private' ) {
+					this.publishingOptions = [
+						{
+							title: 'Update',
+							slug: 'update'
+						},
+						{
+							title: 'Publish Publicly',
+							slug: 'publish-publicly'
+						}
+					];
 				}
+				if ( this.model.get( 'post_status' ) === 'future' ) {
+					this.publishingOptions = [
+						{
+							title: 'Update',
+							slug: 'update'
+						},
+						{
+							title: 'Publish Now',
+							slug: 'publish-now'
+						},
+						{
+							title: 'Publish Privately',
+							slug: 'publish-privately'
+						}
+
+					];
+				}
+				if ( _.contains( [ 'auto-draft', 'draft' ], this.model.get( 'post_status' ) ) ) {
+					this.publishingOptions = [
+						{
+							title: 'Publish Now',
+							slug: 'publish'
+						},
+						{
+							title: 'Schedule',
+							slug: 'schedule'
+						}
+
+					];
+				}
+				$dropdown = $( '<div class="btn-group"></div>' );
+				$dropdownUL = $( '<ul class="dropdown-menu" role="menu"></ul> ' );
+				_.each( this.publishingOptions, function( element, index, list ) {
+					if ( index === 0 ) {
+						$dropdown.append( $('<button type="button" class="btn btn-primary publish-action-' + element.slug + '">' + element.title + '</button>' ),
+							$( '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' ) );
+					} else {
+						$dropdownUL.append( $( '<li><a href="#" class="publish-action-' + element.slug + '">' + element.title + '</a></li>' ) );
+					}
+				});
+				$dropdown.append( $dropdownUL );
+				this.$el.append( $dropdown );
+				$('#misc-publishing-actions').append( this.$el );
+			},
+
+			handleUpdateClick: function() {
+				$('#publish').trigger( 'click' );
+			},
+
+			handlePublishPrivatelyClick: function() {
+				$('#post_status').val( 'publish' );
+				$('[name="visibility"]').val( 'private' );
+				$('#publish').trigger( 'click' );
+			},
+
+			handlePublishPubliclyClick: function() {
+				$('#post_status').val( 'publish' );
+				$('[name="visibility"]').val( 'public' );
+				$('#publish').trigger( 'click' );
 			}
 		});
 
