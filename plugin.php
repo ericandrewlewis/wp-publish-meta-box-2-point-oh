@@ -10,8 +10,8 @@ add_action( 'admin_enqueue_scripts', function() {
 	if ( ! in_array( $GLOBALS['hook_suffix'], $whitelisted_pages ) ) {
 		return;
 	}
-	// wp_enqueue_style( 'rad-publish-meta-box', plugins_url( 'includes/css/plugin.css', __FILE__ ) );
-	wp_enqueue_style( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
+	wp_enqueue_style( 'rad-publish-meta-box', plugins_url( 'includes/css/plugin.css', __FILE__ ) );
+	// wp_enqueue_style( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
 	wp_enqueue_script( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js', array( 'jquery' ) );
 
 	wp_register_script( 'jquery-simulate', plugins_url( 'includes/js/jquery.simulate.js', __FILE__ ), array( 'jquery' ) );
