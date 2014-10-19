@@ -1,4 +1,16 @@
 (function( $, Backbone, _ ) {
+
+	/**
+	 * Ensure clicking buttons inside #submitpost don't trigger the submit event.
+	 *
+	 * See trac ticket #30035
+	 */
+	$(function() {
+		$('#submitpost').find( ':button' ).on( 'click.edit-post', function( event ) {
+			$('form#post').off( 'submit.edit-post' );
+		});
+	});
+
 	$(function() {
 		var postStatusController = Backbone.View.extend({
 			initialize: function() {
@@ -10,6 +22,8 @@
 				this.$el.on( 'click', '.publish-action-preview', _.bind( this.handlePreviewClick, this ) );
 				this.$el.on( 'click', '.publish-action-trash', _.bind( this.handleTrashClick, this ) );
 				this.$el.on( 'click', '.publish-action-save-draft', _.bind( this.handleSaveDraftClick, this ) );
+				this.$el.on( 'click', '.publish-action-save-as-pending-review', _.bind( this.handleSaveAsPendingReviewClick, this ) );
+				this.$el.on( 'click', '.publish-action-publish-now', _.bind( this.handlePublishNowClick, this ) );
 
 			},
 
@@ -32,6 +46,10 @@
 						{
 							title: 'Trash',
 							slug: 'trash'
+						},
+						{
+							title: 'Send back to Pending Review',
+							slug: 'save-as-pending-review'
 						}
 					];
 				}
@@ -52,6 +70,10 @@
 						{
 							title: 'Trash',
 							slug: 'trash'
+						},
+						{
+							title: 'Save as Pending Review',
+							slug: 'save-as-pending-review'
 						}
 					];
 				}
@@ -76,6 +98,10 @@
 						{
 							title: 'Trash',
 							slug: 'trash'
+						},
+						{
+							title: 'Save as Pending Review',
+							slug: 'save-as-pending-review'
 						}
 					];
 				}
@@ -86,12 +112,44 @@
 							slug: 'update'
 						},
 						{
+							title: 'Publish Privately',
+							slug: 'publish-privately'
+						},
+						{
 							title: 'Save Draft',
 							slug: 'save-draft'
 						},
 						{
+							title: 'Preview',
+							slug: 'preview'
+						},
+						{
+							title: 'Trash',
+							slug: 'trash'
+						},
+						{
+							title: 'Save as Pending Review',
+							slug: 'save-as-pending-review'
+						}
+					];
+				}
+				if ( this.model.get( 'post_status' ) === 'pending' ) {
+					this.publishingOptions = [
+						{
+							title: 'Update',
+							slug: 'save-as-pending-review'
+						},
+						{
+							title: 'Publish Now',
+							slug: 'publish-now'
+						},
+						{
 							title: 'Publish Privately',
 							slug: 'publish-privately'
+						},
+						{
+							title: 'Back to draft',
+							slug: 'save-draft'
 						},
 						{
 							title: 'Preview',
@@ -107,8 +165,8 @@
 				$dropdownUL = $( '<ul class="dropdown-menu" role="menu"></ul> ' );
 				_.each( this.publishingOptions, function( element, index, list ) {
 					if ( index === 0 ) {
-						$dropdown.append( $('<button type="button" class="btn btn-primary publish-action-' + element.slug + '">' + element.title + '</button>' ),
-							$( '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' ) );
+						$dropdown.append( $('<button class="btn btn-primary publish-action-' + element.slug + '">' + element.title + '</button>' ),
+							$( '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' ) );
 					} else {
 						$dropdownUL.append( $( '<li><a href="#" class="publish-action-' + element.slug + '">' + element.title + '</a></li>' ) );
 					}
@@ -139,6 +197,7 @@
 
 			handlePreviewClick: function( event ) {
 				event.preventDefault();
+				event.stopPropagation();
 				$('#post-preview').simulate( 'click' );
 			},
 
@@ -149,7 +208,22 @@
 
 			handleSaveDraftClick: function() {
 				event.preventDefault();
+				$('#post_status').val( 'draft' );
 				$('#save-post').simulate( 'click' );
+			},
+
+			handleSaveAsPendingReviewClick: function() {
+				event.preventDefault();
+				$('#post_status').val( 'pending' );
+				if ( $('#save-post').length ) {
+					$('#save-post').simulate( 'click' );
+				} else {
+					$('#publish').simulate( 'click' );
+				}
+			},
+
+			handlePublishNowClick: function() {
+				$('#publish').simulate( 'click' );
 			}
 		});
 

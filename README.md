@@ -44,3 +44,12 @@ Published Privately
 - [ ] Edit publish date (maybe schedule for future)
 - [x] Trash
 - [x] Preview changes
+
+Pending Review
+- [x] Update
+- [x] Publish Now
+- [x] Publish Privately
+- [ ] Schedule
+- [x] Send back to draft
+- [x] Trash
+- [x] Preview changes
