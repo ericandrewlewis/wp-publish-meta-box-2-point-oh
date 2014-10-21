@@ -13,11 +13,14 @@ add_action( 'admin_enqueue_scripts', function() {
 	}
 	wp_enqueue_style( 'publish-meta-box-two-point-oh', plugins_url( 'includes/css/plugin.css', __FILE__ ) );
 	// wp_enqueue_style( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
-	wp_enqueue_script( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js', array( 'jquery' ) );
+	wp_enqueue_script( 'bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js', array( 'jquery' ) );
+	wp_enqueue_style( 'jquery-ui-css', plugins_url( 'includes/css/jquery-ui.css', __FILE__ ) );
 
 	wp_register_script( 'jquery-simulate', plugins_url( 'includes/js/jquery.simulate.js', __FILE__ ), array( 'jquery' ) );
 
-	wp_enqueue_script( 'publish-meta-box-two-point-oh-js', plugins_url( 'includes/js/plugin.js', __FILE__ ), array( 'jquery', 'jquery-simulate', 'backbone', 'post' ) );
+	wp_enqueue_script( 'publish-meta-box-two-point-oh-js',
+		plugins_url( 'includes/js/plugin.js', __FILE__ ),
+		array( 'jquery', 'jquery-simulate', 'backbone', 'post', 'jquery-ui-datepicker' ) );
 	$wp_scripts->add_data( 'publish-meta-box-two-point-oh-js', 'data',
 		'radPublishMetaBoxData = ' . json_encode( $post ) );
 });

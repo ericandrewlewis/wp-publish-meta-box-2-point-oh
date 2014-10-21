@@ -24,7 +24,7 @@
 				this.$el.on( 'click', '.publish-action-save-draft', _.bind( this.handleSaveDraftClick, this ) );
 				this.$el.on( 'click', '.publish-action-save-as-pending-review', _.bind( this.handleSaveAsPendingReviewClick, this ) );
 				this.$el.on( 'click', '.publish-action-publish-now', _.bind( this.handlePublishNowClick, this ) );
-
+				this.$el.on( 'click', '.publish-action-schedule', _.bind( this.handleScheduleClick, this ) );
 			},
 
 			createDropdown: function() {
@@ -38,6 +38,10 @@
 						{
 							title: 'Publish Privately',
 							slug: 'publish-privately'
+						},
+						{
+							title: 'Schedule',
+							slug: 'schedule'
 						},
 						{
 							title: 'Preview Changes',
@@ -224,6 +228,11 @@
 
 			handlePublishNowClick: function() {
 				$('#publish').simulate( 'click' );
+			},
+
+			handleScheduleClick: function() {
+				$('.misc-pub-rad-publish-container').append( $( '<div class="datepicker"></div>' ) );
+				$('.datepicker').datepicker();
 			}
 		});
 
