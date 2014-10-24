@@ -13,9 +13,17 @@
 
 	$(function() {
 		var postStatusController = Backbone.View.extend({
+
+			/**
+			 * Bind click actions from Bootstrap dropdown to handlers.
+			 */
 			initialize: function() {
-				this.model = new Backbone.Model( radPublishMetaBoxData );
+				this.model = new Backbone.Model( window.radPublishMetaBoxData );
+				this.$el = $('.misc-pub-rad-publish-container');
+
 				this.createDropdown();
+				this.initializeDatepicker();
+
 				this.$el.on( 'click', '.publish-action-update', _.bind( this.handleUpdateClick, this ) );
 				this.$el.on( 'click', '.publish-action-publish-privately', _.bind( this.handlePublishPrivatelyClick, this ) );
 				this.$el.on( 'click', '.publish-action-publish-publicly', _.bind( this.handlePublishPubliclyClick, this ) );
@@ -24,11 +32,15 @@
 				this.$el.on( 'click', '.publish-action-save-draft', _.bind( this.handleSaveDraftClick, this ) );
 				this.$el.on( 'click', '.publish-action-save-as-pending-review', _.bind( this.handleSaveAsPendingReviewClick, this ) );
 				this.$el.on( 'click', '.publish-action-publish-now', _.bind( this.handlePublishNowClick, this ) );
+				this.$el.on( 'click', '.publish-action-show-schedule-interface', _.bind( this.handleShowScheduleInterfaceClick, this ) );
 				this.$el.on( 'click', '.publish-action-schedule', _.bind( this.handleScheduleClick, this ) );
+				this.$('.hour-dropdown,.ampm-dropdown,.minute-input').on( 'change keyup', _.bind( this.handleTimeInputsChange, this ) );
 			},
 
+			/**
+			 * Create the Bootstrap dropdown and append it to #misc-publishing-actions.
+			 */
 			createDropdown: function() {
-				this.$el = $('<div class="misc-pub-section misc-pub-rad-publish-container"></div>' );
 				if ( this.model.get( 'post_status' ) === 'publish' ) {
 					this.publishingOptions = [
 						{
@@ -36,15 +48,15 @@
 							slug: 'update'
 						},
 						{
-							title: 'Publish Privately',
+							title: 'Publish privately',
 							slug: 'publish-privately'
 						},
 						{
 							title: 'Schedule',
-							slug: 'schedule'
+							slug: 'show-schedule-interface'
 						},
 						{
-							title: 'Preview Changes',
+							title: 'Preview changes',
 							slug: 'preview'
 						},
 						{
@@ -52,8 +64,12 @@
 							slug: 'trash'
 						},
 						{
-							title: 'Send back to Pending Review',
+							title: 'Send back to pending review',
 							slug: 'save-as-pending-review'
+						},
+						{
+							title: 'Send back to draft',
+							slug: 'save-draft'
 						}
 					];
 				}
@@ -64,11 +80,15 @@
 							slug: 'update'
 						},
 						{
-							title: 'Publish Publicly',
+							title: 'Publish publicly',
 							slug: 'publish-publicly'
 						},
 						{
-							title: 'Preview Changes',
+							title: 'Schedule',
+							slug: 'show-schedule-interface'
+						},
+						{
+							title: 'Preview changes',
 							slug: 'preview'
 						},
 						{
@@ -76,8 +96,12 @@
 							slug: 'trash'
 						},
 						{
-							title: 'Save as Pending Review',
+							title: 'Send back to pending peview',
 							slug: 'save-as-pending-review'
+						},
+						{
+							title: 'Send back to draft',
+							slug: 'save-draft'
 						}
 					];
 				}
@@ -88,15 +112,19 @@
 							slug: 'update'
 						},
 						{
-							title: 'Publish Now',
+							title: 'Publish now',
 							slug: 'publish-now'
 						},
 						{
-							title: 'Publish Privately',
+							title: 'Schedule',
+							slug: 'show-schedule-interface'
+						},
+						{
+							title: 'Publish privately',
 							slug: 'publish-privately'
 						},
 						{
-							title: 'Preview Changes',
+							title: 'Preview changes',
 							slug: 'preview'
 						},
 						{
@@ -104,8 +132,12 @@
 							slug: 'trash'
 						},
 						{
-							title: 'Save as Pending Review',
+							title: 'Send back to pending review',
 							slug: 'save-as-pending-review'
+						},
+						{
+							title: 'Send back to draft',
+							slug: 'save-draft'
 						}
 					];
 				}
@@ -116,11 +148,15 @@
 							slug: 'update'
 						},
 						{
-							title: 'Publish Privately',
+							title: 'Publish privately',
 							slug: 'publish-privately'
 						},
 						{
-							title: 'Save Draft',
+							title: 'Schedule',
+							slug: 'show-schedule-interface'
+						},
+						{
+							title: 'Save draft',
 							slug: 'save-draft'
 						},
 						{
@@ -132,7 +168,7 @@
 							slug: 'trash'
 						},
 						{
-							title: 'Save as Pending Review',
+							title: 'Save as pending review',
 							slug: 'save-as-pending-review'
 						}
 					];
@@ -144,15 +180,19 @@
 							slug: 'save-as-pending-review'
 						},
 						{
-							title: 'Publish Now',
+							title: 'Publish now',
 							slug: 'publish-now'
 						},
 						{
-							title: 'Publish Privately',
+							title: 'Schedule',
+							slug: 'show-schedule-interface'
+						},
+						{
+							title: 'Publish privately',
 							slug: 'publish-privately'
 						},
 						{
-							title: 'Back to draft',
+							title: 'Send back to draft',
 							slug: 'save-draft'
 						},
 						{
@@ -165,19 +205,18 @@
 						}
 					];
 				}
-				$dropdown = $( '<div class="btn-group"></div>' );
+				$dropdown = $( '<div class="misc-pub-section publish-button btn-group"></div>' );
 				$dropdownUL = $( '<ul class="dropdown-menu" role="menu"></ul> ' );
 				_.each( this.publishingOptions, function( element, index, list ) {
 					if ( index === 0 ) {
-						$dropdown.append( $('<button class="btn btn-primary publish-action-' + element.slug + '">' + element.title + '</button>' ),
-							$( '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' ) );
+						$dropdown.append( $('<button type="button" class="btn btn-primary publish-action-' + element.slug + '">' + element.title + '</button>' ),
+							$( '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' ) );
 					} else {
 						$dropdownUL.append( $( '<li><a href="#" class="publish-action-' + element.slug + '">' + element.title + '</a></li>' ) );
 					}
 				});
 				$dropdown.append( $dropdownUL );
-				this.$el.append( $dropdown );
-				$('#misc-publishing-actions').append( this.$el );
+				$dropdown.insertAfter( '.rad-publish-status' );
 			},
 
 			handleUpdateClick: function() {
@@ -212,12 +251,14 @@
 
 			handleSaveDraftClick: function() {
 				event.preventDefault();
+				$('[name="visibility"]').val( 'public' );
 				$('#post_status').val( 'draft' );
 				$('#save-post').simulate( 'click' );
 			},
 
 			handleSaveAsPendingReviewClick: function() {
 				event.preventDefault();
+				$('[name="visibility"]').val( 'public' );
 				$('#post_status').val( 'pending' );
 				if ( $('#save-post').length ) {
 					$('#save-post').simulate( 'click' );
@@ -227,12 +268,46 @@
 			},
 
 			handlePublishNowClick: function() {
+				event.preventDefault();
 				$('#publish').simulate( 'click' );
 			},
 
+			handleShowScheduleInterfaceClick: function() {
+				event.preventDefault();
+				this.$('.schedule').show();
+			},
+
+			initializeDatepicker: function() {
+				$('.datepicker').datepicker({
+					onSelect: function( dateString, datepickerInstance ) {
+						var month = datepickerInstance.selectedMonth + 1;
+						if ( month < 10 ) {
+							month = '0' + month;
+						}
+						$('#mm [value="' + month + '"]').prop( 'selected', true );
+
+						$('#jj').val( datepickerInstance.selectedDay );
+						$('.save-timestamp').simulate('click');
+					}
+				});
+			},
+
+			handleTimeInputsChange: function( event ) {
+				var hours = parseInt( this.$('.hour-dropdown').val() ),
+					ampm = this.$('.ampm-dropdown').val(),
+					minutes = this.$('.minute-input').val();
+				if ( ampm === 'pm' ) {
+					hours += 12;
+				}
+				$('#hh').val( hours );
+				$('#mn').val( minutes );
+				$('.save-timestamp').simulate('click');
+			},
+
 			handleScheduleClick: function() {
-				$('.misc-pub-rad-publish-container').append( $( '<div class="datepicker"></div>' ) );
-				$('.datepicker').datepicker();
+				$('#post_status').val( 'publish' );
+				$('[name="visibility"]').val( 'public' );
+				$('#publish').simulate( 'click' );
 			}
 		});
 

@@ -1,4 +1,4 @@
-.misc-pub-rad-publish-container {
+.misc-pub-rad-publish-container  {
 	text-align: center;
 }
 
@@ -9,8 +9,6 @@
 #major-publishing-actions {
 	display: none;
 }
-
-
 
 /** Styles from bootstrap for a multi-dropdown */
 
@@ -179,4 +177,16 @@
 	color: #262626;
 	text-decoration: none;
 	background-color: #f5f5f5;
+}
+
+.misc-pub-rad-publish-container .ui-datepicker {
+	margin: 1em auto;
+}
+
+.misc-pub-rad-publish-container .minute-input {
+	vertical-align: middle;
+}
+
+.misc-pub-rad-publish-container .schedule {
+	display: none;
 }
