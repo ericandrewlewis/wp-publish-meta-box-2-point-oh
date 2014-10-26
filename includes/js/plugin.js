@@ -56,10 +56,6 @@
 							slug: 'show-schedule-interface'
 						},
 						{
-							title: 'Preview changes',
-							slug: 'preview'
-						},
-						{
 							title: 'Trash',
 							slug: 'trash'
 						},
@@ -86,10 +82,6 @@
 						{
 							title: 'Schedule',
 							slug: 'show-schedule-interface'
-						},
-						{
-							title: 'Preview changes',
-							slug: 'preview'
 						},
 						{
 							title: 'Trash',
@@ -124,10 +116,6 @@
 							slug: 'publish-privately'
 						},
 						{
-							title: 'Preview changes',
-							slug: 'preview'
-						},
-						{
 							title: 'Trash',
 							slug: 'trash'
 						},
@@ -158,10 +146,6 @@
 						{
 							title: 'Save draft',
 							slug: 'save-draft'
-						},
-						{
-							title: 'Preview',
-							slug: 'preview'
 						},
 						{
 							title: 'Trash',
@@ -196,27 +180,29 @@
 							slug: 'save-draft'
 						},
 						{
-							title: 'Preview',
-							slug: 'preview'
-						},
-						{
 							title: 'Trash',
 							slug: 'trash'
 						}
 					];
 				}
-				$dropdown = $( '<div class="misc-pub-section publish-button btn-group"></div>' );
+				$container = $( '<div class="misc-pub-section publish-button clearfix"></div>' );
+				$container.append( $('<button type="button" class="dashicons-before dashicons-search btn publish-action-preview btn-info">Preview</button>' ) );
+
+				$dropdownContainer = $('<div class="dropdown-menu-container btn-group"></div>' );
 				$dropdownUL = $( '<ul class="dropdown-menu" role="menu"></ul> ' );
+
 				_.each( this.publishingOptions, function( element, index, list ) {
 					if ( index === 0 ) {
-						$dropdown.append( $('<button type="button" class="btn btn-primary publish-action-' + element.slug + '">' + element.title + '</button>' ),
+						$dropdownContainer.append( $('<button type="button" class="btn btn-primary publish-action-' + element.slug + '">' + element.title + '</button>' ),
 							$( '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' ) );
 					} else {
 						$dropdownUL.append( $( '<li><a href="#" class="publish-action-' + element.slug + '">' + element.title + '</a></li>' ) );
 					}
 				});
-				$dropdown.append( $dropdownUL );
-				$dropdown.insertAfter( '.rad-publish-status' );
+
+				$dropdownContainer.append( $dropdownUL );
+				$container.append( $dropdownContainer );
+				$container.insertAfter( '.rad-publish-status' );
 			},
 
 			handleUpdateClick: function() {

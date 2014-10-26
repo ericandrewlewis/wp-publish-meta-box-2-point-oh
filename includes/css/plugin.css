@@ -117,7 +117,7 @@
 .misc-pub-rad-publish-container .dropdown-menu {
 	position: absolute;
 	top: 100%;
-	left: 0;
+	right: 0;
 	z-index: 1000;
 	display: none;
 	float: left;
@@ -190,3 +190,32 @@
 .misc-pub-rad-publish-container .schedule {
 	display: none;
 }
+
+.misc-pub-rad-publish-container .dropdown-menu-container {
+	float: right;
+}
+
+.misc-pub-rad-publish-container .publish-action-preview {
+	float: left;
+}
+
+
+
+.clearfix:before,
+.clearfix:after {
+	content: " "; /* 1 */
+	display: table; /* 2 */
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.clearfix {
+	*zoom: 1;
+}
+
