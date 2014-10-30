@@ -6,216 +6,44 @@
 .misc-pub-curtime,
 .misc-pub-visibility,
 #minor-publishing-actions,
-#major-publishing-actions {
+#submitpost > #major-publishing-actions {
 	display: none;
-}
-
-/** Styles from bootstrap for a multi-dropdown */
-
-.misc-pub-rad-publish-container .btn-group,
-.misc-pub-rad-publish-container .btn-group-vertical {
-	position: relative;
-	display: inline-block;
-	vertical-align: middle;
-}
-.misc-pub-rad-publish-container .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-.misc-pub-rad-publish-container .btn-group>.btn:last-child:not(:first-child), .btn-group>.dropdown-toggle:not(:first-child) {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-.misc-pub-rad-publish-container .btn-group>.btn:first-child {
-	margin-left: 0;
-}
-
-.misc-pub-rad-publish-container .btn-group>.btn, .misc-pub-rad-publish-container .btn-group-vertical>.btn {
-	position: relative;
-	float: left;
-}
-
-.misc-pub-rad-publish-container .btn {
-	display: inline-block;
-	padding: 6px 12px;
-	margin-bottom: 0;
-	font-size: 14px;
-	font-weight: 400;
-	line-height: 1.42857143;
-	text-align: center;
-	white-space: nowrap;
-	vertical-align: middle;
-	cursor: pointer;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	background-image: none;
-	border: 1px solid transparent;
-	border-radius: 4px;
-}
-
-.misc-pub-rad-publish-container input, .misc-pub-rad-publish-container button {
-	font-family: inherit;
-	font-size: inherit;
-	line-height: inherit;
-}
-
-.misc-pub-rad-publish-container .btn-group>.btn+.dropdown-toggle {
-	padding-right: 8px;
-	padding-left: 8px;
-}
-
-.misc-pub-rad-publish-container .btn-group .btn+.btn,
-.misc-pub-rad-publish-container .btn-group .btn+.btn-group,
-.misc-pub-rad-publish-container .btn-group .btn-group+.btn,
-.misc-pub-rad-publish-container .btn-group .btn-group+.btn-group {
-	margin-left: -1px;
-}
-
-.misc-pub-rad-publish-container button,
-.misc-pub-rad-publish-container html input[type=button],
-.misc-pub-rad-publish-container input[type=reset],
-.misc-pub-rad-publish-container input[type=submit] {
-	-webkit-appearance: button;
-	cursor: pointer;
-}
-
-.misc-pub-rad-publish-container button,
-.misc-pub-rad-publish-container select {
-	text-transform: none;
-}
-
-.misc-pub-rad-publish-container .btn .caret {
-	margin-left: 0;
-}
-
-.misc-pub-rad-publish-container .caret {
-	display: inline-block;
-	width: 0;
-	height: 0;
-	margin-left: 2px;
-	vertical-align: middle;
-	border-top: 4px solid;
-	border-right: 4px solid transparent;
-	border-left: 4px solid transparent;
-}
-
-.misc-pub-rad-publish-container .sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0,0,0,0);
-	border: 0;
-}
-
-.misc-pub-rad-publish-container .dropdown-menu {
-	position: absolute;
-	top: 100%;
-	right: 0;
-	z-index: 1000;
-	display: none;
-	float: left;
-	min-width: 160px;
-	padding: 5px 0;
-	margin: 2px 0 0;
-	font-size: 14px;
-	text-align: left;
-	list-style: none;
-	background-color: #fff;
-	-webkit-background-clip: padding-box;
-	background-clip: padding-box;
-	border: 1px solid #ccc;
-	border: 1px solid rgba(0,0,0,.15);
-	border-radius: 4px;
-	-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-	box-shadow: 0 6px 12px rgba(0,0,0,.175);
-}
-.misc-pub-rad-publish-container ul,
-.misc-pub-rad-publish-container ol {
-	margin-top: 0;
-	margin-bottom: 10px;
-}
-
-.misc-pub-rad-publish-container .dropdown-menu>li>a {
-	display: block;
-	padding: 3px 20px;
-	clear: both;
-	font-weight: 400;
-	line-height: 1.42857143;
-	color: #333;
-	white-space: nowrap;
-	text-decoration: none;
-}
-
-.misc-pub-rad-publish-container .open>.dropdown-menu {
-	display: block;
-}
-
-.misc-pub-rad-publish-container .btn-primary:hover,
-.misc-pub-rad-publish-container .btn-primary:focus,
-.misc-pub-rad-publish-container .btn-primary:active,
-.misc-pub-rad-publish-container .btn-primary.active,
-.misc-pub-rad-publish-container .open>.dropdown-toggle.btn-primary {
-	color: #fff;
-	background-color: #3071a9;
-	border-color: #285e8e;
-}
-
-.misc-pub-rad-publish-container .btn-primary {
-	color: #fff;
-	background-color: #428bca;
-	border-color: #357ebd;
-}
-
-.misc-pub-rad-publish-container .dropdown-menu>li>a:hover, .misc-pub-rad-publish-container .dropdown-menu>li>a:focus {
-	color: #262626;
-	text-decoration: none;
-	background-color: #f5f5f5;
 }
 
 .misc-pub-rad-publish-container .ui-datepicker {
 	margin: 1em auto;
 }
 
-.misc-pub-rad-publish-container .minute-input {
+/*.misc-pub-rad-publish-container .minute-input {
 	vertical-align: middle;
 }
 
 .misc-pub-rad-publish-container .schedule {
 	display: none;
 }
+*/
 
-.misc-pub-rad-publish-container .dropdown-menu-container {
-	float: right;
+.pmb2-poststatus-label {
+	line-height: 25px;
+	padding: 2px 0;
 }
 
-.misc-pub-rad-publish-container .publish-action-preview {
+.pmb2-datepicker {
+	width: 40%;
+}
+
+.pmb2 .dashicons-calendar-alt,
+.pmb2 .dashicons-clock {
+	vertical-align: middle;
+	width: 10%;
+}
+.pmb2-clock {
+	width: 30%;
+}
+
+#preview-action {
 	float: left;
 }
-
-
-
-.clearfix:before,
-.clearfix:after {
-	content: " "; /* 1 */
-	display: table; /* 2 */
+#preview-action .dashicons-search:before {
+	vertical-align: middle;
 }
-
-.clearfix:after {
-	clear: both;
-}
-
-/**
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
-.clearfix {
-	*zoom: 1;
-}
-
