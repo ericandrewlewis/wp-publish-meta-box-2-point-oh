@@ -7,21 +7,16 @@
 .misc-pub-visibility,
 #minor-publishing-actions,
 #submitpost > #major-publishing-actions {
-	/*display: none;*/
+	display: none;
 }
 
 .misc-pub-rad-publish-container .ui-datepicker {
 	margin: 1em auto;
 }
 
-/*.misc-pub-rad-publish-container .minute-input {
-	vertical-align: middle;
-}
-
 .misc-pub-rad-publish-container .schedule {
 	display: none;
 }
-*/
 
 .pmb2-poststatus-label {
 	line-height: 25px;
