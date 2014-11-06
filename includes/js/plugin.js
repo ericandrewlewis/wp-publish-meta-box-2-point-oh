@@ -102,14 +102,15 @@
 					newPostStatus = $input.val();
 
 				$('.pmb2-publish').html( $relatedLabel.html() );
+				$('.pmb2-publish-inner').hide();
+				$('.pmb2-publish').removeClass( 'disabled' );
+				this.overrideAction = '';
 				switch ( newPostStatus ) {
 					case 'save-as-draft':
-						this.overrideAction = '';
 						$('[name="visibility"]').val( 'public' );
 						$('#post_status').val( 'draft' );
 					break;
 					case 'send-to-pending-review':
-						this.overrideAction = '';
 						$('[name="visibility"]').val( 'public' );
 						$('#post_status').val( 'pending' );
 					break;
@@ -120,12 +121,10 @@
 						}
 					break;
 					case 'publish-privately':
-						this.overrideAction = '';
 						$('#post_status').val( 'publish' );
 						$('[name="visibility"]').val( 'private' );
 					break;
 					case 'publish-with-password-protection':
-						this.overrideAction = '';
 						$('#post_status').val( 'publish' );
 						$('[name="visibility"]').val( 'password' );
 					break;
