@@ -17,10 +17,11 @@
 			 * Bind click actions from Bootstrap dropdown to handlers.
 			 */
 			initialize: function() {
-				this.model = new Backbone.Model( window.radPublishMetaBoxData );
+				this.previousPostDetails = new Backbone.Model( window.radPublishMetaBoxData );
+				this.overrideAction = '';
 				this.initializeDatepicker();
 
-				$('[name=pmb2-poststatus]').on( 'change', this.handlePostStatusChange );
+				$('[name=pmb2-poststatus]').on( 'change', _.bind( this.handlePostStatusChange, this ) );
 				$('.pmb2-publish').on( 'click', _.bind( this.handleMajorPublishActionButtonClick, this ) );
 				$('.pmb2-publish-action-preview').on( 'click', this.handlePreviewClick );
 				$('.pmb2-password').on( 'keyup', this.syncPostPassword );
@@ -50,47 +51,57 @@
 			 * When a new post status is selected, update
 			 * the major publishing action button text.
 			 */
-			handlePostStatusChange: function() {
-				var $this = $(this),
-					$relatedLabel = $('[for=' + $this.attr('id') + ']'),
-					newPostStatus = $(this).val();
+			handlePostStatusChange: function( event ) {
+				var $input = $(event.currentTarget),
+					$relatedLabel = $('[for=' + $input.attr('id') + ']'),
+					newPostStatus = $input.val();
 
 				$('.pmb2-publish').html( $relatedLabel.html() );
 				switch ( newPostStatus ) {
 					case 'save-as-draft':
+						this.overrideAction = '';
 						$('[name="visibility"]').val( 'public' );
 						$('#post_status').val( 'draft' );
 					break;
 					case 'send-to-pending-review':
+						this.overrideAction = '';
 						$('[name="visibility"]').val( 'public' );
 						$('#post_status').val( 'pending' );
 					break;
 					case 'publish-now':
+						this.overrideAction = '';
 						$('#post_status').val( 'publish' );
 						$('[name="visibility"]').val( 'public' );
 						// @todo
 					break;
 					case 'schedule':
+						this.overrideAction = '';
 						$('#post_status').val( 'publish' );
 						$('[name="visibility"]').val( 'public' );
 					break;
 					case 'publish-privately':
+						this.overrideAction = '';
 						$('#post_status').val( 'publish' );
 						$('[name="visibility"]').val( 'private' );
 					break;
 					case 'publish-with-password-protection':
+						this.overrideAction = '';
 						$('#post_status').val( 'publish' );
 						$('[name="visibility"]').val( 'password' );
 					break;
 					case 'move-to-trash':
-						$('#delete-action a').simulate( 'click' );
+						this.overrideAction = 'trash';
 					break;
 				}
 			},
 
-			handleMajorPublishActionButtonClick: function() {
+			handleMajorPublishActionButtonClick: function( event ) {
 				var postStatus = $('[name=pmb2-poststatus]').val(),
-					previousStatus = this.model.get('post_status');
+					previousStatus = this.previousPostDetails.get('post_status');
+				if ( this.overrideAction == 'trash' ) {
+					$('#delete-action a').simulate( 'click' );
+					return;
+				}
 				switch( postStatus ) {
 					case 'publish-now':
 					case 'schedule':
@@ -110,18 +121,6 @@
 					break;
 				}
 			}
-
-			// handleTimeInputsChange: function( event ) {
-			// 	var hours = parseInt( this.$('.hour-dropdown').val() ),
-			// 		ampm = this.$('.ampm-dropdown').val(),
-			// 		minutes = this.$('.minute-input').val();
-			// 	if ( ampm === 'pm' ) {
-			// 		hours += 12;
-			// 	}
-			// 	$('#hh').val( hours );
-			// 	$('#mn').val( minutes );
-			// 	$('.save-timestamp').simulate('click');
-			// }
 		});
 
 		new postStatusController();
