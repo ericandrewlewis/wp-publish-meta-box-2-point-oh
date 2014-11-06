@@ -7,7 +7,7 @@
 .misc-pub-visibility,
 #minor-publishing-actions,
 #submitpost > #major-publishing-actions {
-	display: none;
+	/*display: none;*/
 }
 
 .misc-pub-rad-publish-container .ui-datepicker {
@@ -37,8 +37,9 @@
 	vertical-align: middle;
 	width: 10%;
 }
-.pmb2-clock {
-	width: 30%;
+.pmb2-minute {
+	width: 30px;
+	vertical-align: middle;
 }
 
 #preview-action {
@@ -46,4 +47,15 @@
 }
 #preview-action .dashicons-search:before {
 	vertical-align: middle;
+}
+.pmb2-password {
+	display: none;
+}
+
+.pmb2-publish-inner {
+	display: none;
+}
+
+.pmb2-publish-at-date-inner {
+	display: none;
 }

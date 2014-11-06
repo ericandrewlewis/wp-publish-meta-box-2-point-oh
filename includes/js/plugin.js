@@ -17,7 +17,9 @@
 			 * Bind click actions from Bootstrap dropdown to handlers.
 			 */
 			initialize: function() {
-				this.previousPostDetails = new Backbone.Model( window.radPublishMetaBoxData );
+				var self = this;
+				this.previousPostDetails = new Backbone.Model( window.radPublishMetaBoxData.post );
+				this.currentTime = new Date( window.radPublishMetaBoxData.currentTime );
 				this.overrideAction = '';
 				this.initializeDatepicker();
 
@@ -25,9 +27,52 @@
 				$('.pmb2-publish').on( 'click', _.bind( this.handleMajorPublishActionButtonClick, this ) );
 				$('.pmb2-publish-action-preview').on( 'click', this.handlePreviewClick );
 				$('.pmb2-password').on( 'keyup', this.syncPostPassword );
-				// this.$('.hour-dropdown,.ampm-dropdown,.minute-input').on( 'change keyup', _.bind( this.handleTimeInputsChange, this ) );
+				$('.pmb2-hour-dropdown').on( 'change', this.syncHourInput );
+				$('.pmb2-minute').on( 'keyup', this.syncMinuteInput );
+				$('#pmb2-publish-at-date').on( 'click', function() {
+					$('.pmb2-publish-at-date-inner').show();
+				});
+				$('[name=pmb2-publish-when]').on( 'change', function() {
+					$('.pmb2-publish').removeClass( 'disabled' );
+					$input = $(this);
+					if ( $input.val() == 'now' ) {
+						$('.pmb2-publish').html( 'Publish Now' );
+						self.subaction = 'publish-now';
+						$('.pmb2-publish-at-date-inner').hide();
+					} else if ( $input.val() == 'publish-at-date' ) {
+						$('.pmb2-publish').html( 'Schedule' );
+						self.subaction = 'publish-at-date';
+						$('.pmb2-publish-at-date-inner').show();
+					}
+				});
 			},
 
+			setPostDate: function( dateInfo ) {
+				var dateMap = {
+					year:   $('#aa'),
+					month:  $('#mm'),
+					day:    $('#jj'),
+					hour:   $('#hh'),
+					minute: $('#mn')
+				};
+
+				if ( dateInfo.month && dateInfo.month < 10 ) {
+					dateInfo.month = '0' + dateInfo.month;
+				}
+				if ( dateInfo.minute && dateInfo.minute < 10 ) {
+					dateInfo.minute = '0' + dateInfo.minute;
+				}
+				_.each( dateInfo, function( element, index, list ) {
+					if ( ! dateMap.hasOwnProperty( index ) ) {
+						return;
+					}
+					dateMap[index].val( element );
+				});
+			},
+
+			/**
+			 * Initialize the Scheduling jQuery UI Datepicker.
+			 */
 			initializeDatepicker: function() {
 				$('.pmb2-datepicker').datepicker({
 					onSelect: function( dateString, datepickerInstance ) {
@@ -68,16 +113,11 @@
 						$('[name="visibility"]').val( 'public' );
 						$('#post_status').val( 'pending' );
 					break;
-					case 'publish-now':
-						this.overrideAction = '';
-						$('#post_status').val( 'publish' );
-						$('[name="visibility"]').val( 'public' );
-						// @todo
-					break;
-					case 'schedule':
-						this.overrideAction = '';
-						$('#post_status').val( 'publish' );
-						$('[name="visibility"]').val( 'public' );
+					case 'publish':
+						$('.pmb2-publish-inner').show();
+						if ( ! $('[name=pmb2-publish-when]:checked').val() ) {
+							$('.pmb2-publish').addClass( 'disabled' );
+						}
 					break;
 					case 'publish-privately':
 						this.overrideAction = '';
@@ -95,22 +135,59 @@
 				}
 			},
 
+			/**
+			 * When the Major publishing action button is clicked,
+			 * do some under-the-hood business to make sure the
+			 * intended action is done.
+			 *
+			 * @param  jQuery.Event event
+			 */
 			handleMajorPublishActionButtonClick: function( event ) {
-				var postStatus = $('[name=pmb2-poststatus]').val(),
+				var postStatus = $('[name=pmb2-poststatus]:checked').val(),
 					previousStatus = this.previousPostDetails.get('post_status');
+
+				if ( $('.pmb2-publish').hasClass( 'disabled' ) ) {
+					return;
+				}
 				if ( this.overrideAction == 'trash' ) {
 					$('#delete-action a').simulate( 'click' );
+					var $submitpost = $('#submitpost');
+					$submitpost.find('#major-publishing-actions .spinner').show();
+					$submitpost.find( ':button, :submit, a.submitdelete, #post-preview' )
+						.addClass( 'disabled' );
 					return;
 				}
 				switch( postStatus ) {
-					case 'publish-now':
+					case 'publish':
+						if ( this.subaction == 'publish-at-date' ) {
+							var date = new Date( $('.pmb2-datepicker').datepicker( 'getDate' ) );
+							this.setPostDate({
+								year: date.getFullYear(),
+								month: date.getMonth() + 1,
+								day: date.getDate(),
+								hour: $('.pmb2-hour-dropdown').val(),
+								minute: $('.pmb2-minute').val()
+							});
+						} else if ( this.subaction == 'publish-now' ) {
+							this.setPostDate({
+								year:   this.currentTime.getFullYear(),
+								month:  this.currentTime.getMonth() + 1,
+								day:    this.currentTime.getDate(),
+								hour:   this.currentTime.getHours(),
+								minute: this.currentTime.getMinutes()
+							});
+						}
 					case 'schedule':
 					case 'publish-privately':
 						$('#publish').simulate( 'click' );
 					break;
 					case 'save-as-draft':
 					case 'send-to-pending-review':
-						$('#save-post').simulate( 'click' );
+						if ( $('#save-post').length ) {
+							$('#save-post').simulate( 'click' );
+						} else {
+							$('#publish').simulate( 'click' );
+						}
 					break;
 					case 'update':
 						if ( previousStatus === 'draft' || previousStatus === 'pending' ) {
@@ -120,6 +197,16 @@
 						}
 					break;
 				}
+			},
+
+			syncHourInput: function() {
+				$dropdown = $(this);
+				$('#hh').val( $dropdown.val() );
+			},
+
+			syncMinuteInput: function() {
+				$input = $(this);
+				$('#mn').val( $input.val() );
 			}
 		});
 
