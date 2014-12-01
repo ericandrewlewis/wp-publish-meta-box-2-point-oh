@@ -92,6 +92,12 @@
 				$('[name=post_password]').val( $('.pmb2-password').val() );
 			},
 
+			handlePreviewClick: function( event ) {
+				event.preventDefault();
+				event.stopPropagation();
+				$('#post-preview').simulate( 'click' );
+			},
+
 			/**
 			 * When a new post status is selected, update
 			 * the major publishing action button text.
